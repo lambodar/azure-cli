@@ -485,6 +485,22 @@ def update_ag_redirect_configuration(cmd, instance, parent, item_name, redirect_
     return parent
 
 
+def create_ag_rewrite_rule_set(cmd, resource_group_name, application_gateway_name, item_name, no_wait=False):
+    ApplicationGatewayRewriteRuleSet = cmd.get_models(
+        'ApplicationGatewayRewriteRuleSet')
+    ncf = network_client_factory(cmd.cli_ctx).application_gateways
+    ag = ncf.get(resource_group_name, application_gateway_name)
+    new_set = ApplicationGatewayRewriteRuleSet(
+        name=item_name)
+    _upsert(ag, 'rewrite_rule_sets', new_set, 'name')
+    return sdk_no_wait(no_wait, ncf.create_or_update, resource_group_name, application_gateway_name, ag)
+
+
+def update_ag_rewrite_rule_set(cmd, instance, parent, resource_group_name, application_gateway_name, item_name,
+                               no_wait=False):
+    return parent
+
+
 def create_ag_probe(cmd, resource_group_name, application_gateway_name, item_name, protocol, host,
                     path, interval=30, timeout=120, threshold=8, no_wait=False, host_name_from_http_settings=None,
                     min_servers=None, match_body=None, match_status_codes=None):

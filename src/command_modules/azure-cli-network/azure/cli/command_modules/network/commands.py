@@ -293,6 +293,8 @@ def load_command_table(self, _):
     ]
     if self.supported_api_version(min_api='2018-08-01'):
         subresource_properties.append({'prop': 'trusted_root_certificates', 'name': 'root-cert'})
+    if self.supported_api_version(min_api='2018-10-01'):
+        subresource_properties.append({'prop': 'rewrite_rule_sets', 'name': 'rewrite-rule'})
 
     def _make_singular(value):
         try:

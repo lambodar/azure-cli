@@ -149,6 +149,8 @@ def load_arguments(self, _):
     ]
     if self.supported_api_version(min_api='2018-08-01'):
         ag_subresources.append({'name': 'root-cert', 'display': 'trusted root certificate', 'ref': 'trusted_root_certificates'})
+    if self.supported_api_version(min_api='2018-10-01'):
+        ag_subresources.append({'name': 'rewrite-rule', 'display': 'rewrite rule', 'ref': 'rewrite_rule_sets'})
 
     for item in ag_subresources:
         with self.argument_context('network application-gateway {}'.format(item['name'])) as c:
