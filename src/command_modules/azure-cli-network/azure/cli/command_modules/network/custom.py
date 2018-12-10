@@ -485,14 +485,33 @@ def update_ag_redirect_configuration(cmd, instance, parent, item_name, redirect_
     return parent
 
 
-def create_ag_rewrite_rule_set(cmd, resource_group_name, application_gateway_name, item_name, no_wait=False):
+def create_ag_rewrite_rule_set(cmd, resource_group_name, application_gateway_name, item_name, rules=None, no_wait=False):
     ApplicationGatewayRewriteRuleSet = cmd.get_models(
         'ApplicationGatewayRewriteRuleSet')
     ncf = network_client_factory(cmd.cli_ctx).application_gateways
     ag = ncf.get(resource_group_name, application_gateway_name)
     new_set = ApplicationGatewayRewriteRuleSet(
-        name=item_name)
+        name=item_name,
+        rewrite_rules=[{
+            'name': 'rule1',
+            'action_set': {
+                'request_header_configurations': [{'header_name': 'a', 'header_value': 'b'}],
+                'response_header_configurations': [{'header_name': 'a', 'header_value': 'b'}]
+            }
+        }]
+    )
+    new_set2 = ApplicationGatewayRewriteRuleSet(
+        name='set2',
+        rewrite_rules=[{
+            'name': 'rule1',
+            'action_set': {
+                'request_header_configurations': [{'header_name': 'a', 'header_value': 'b'}],
+                'response_header_configurations': [{'header_name': 'a', 'header_value': 'b'}]
+            }
+        }]
+    )
     _upsert(ag, 'rewrite_rule_sets', new_set, 'name')
+    _upsert(ag, 'rewrite_rule_sets', new_set2, 'name')
     return sdk_no_wait(no_wait, ncf.create_or_update, resource_group_name, application_gateway_name, ag)
 
 
